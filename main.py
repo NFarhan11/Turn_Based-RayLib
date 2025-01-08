@@ -31,6 +31,7 @@ class Game:
         self.unit_index = UnitIndex(self.player_units)
         self.index_open = False
         self.battle = Battle(self.player_units, self.enemy_units)
+        self.battle.setup()
 
     def input(self):
         if not self.battle:
