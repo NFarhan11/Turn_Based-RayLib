@@ -1,5 +1,5 @@
 import pyray as pr
-from sprites import UnitSprite, SpriteGroup
+from sprites import UnitSprite, SpriteGroup, UnitNameSprite, UnitStatsSprite
 from settings import BATTLE_POSITIONS
 
 
@@ -29,6 +29,13 @@ class Battle:
         ]
         UnitSprite(pos, groups, unit, index, pos_index, team)
 
-    def update(self, dt):
+        # ui
+        UnitNameSprite(pos, unit, groups)
+        UnitStatsSprite(pos, unit, team, groups)
+
+    # battle system
+
+    def update(self):
+        self.battle_sprites.update()
         pr.clear_background(pr.DARKGRAY)
         self.battle_sprites.draw()
