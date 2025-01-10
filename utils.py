@@ -1,5 +1,6 @@
 import pyray as pr
 
+
 def draw_bar(x, y, width, height, progress, bar_color, background_color):
     """
     Draws a progress bar on the screen.
@@ -15,9 +16,9 @@ def draw_bar(x, y, width, height, progress, bar_color, background_color):
     """
     # Draw the background of the progress bar
     pr.draw_rectangle_v(pr.Vector2(x, y), pr.Vector2(width, height), background_color)
-    
+
     # Calculate the width of the filled part of the progress bar
     filled_width = int(width * progress)
-    
+
     # Draw the filled part of the progress bar
     pr.draw_rectangle_v(pr.Vector2(x, y), pr.Vector2(filled_width, height), bar_color)

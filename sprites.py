@@ -12,7 +12,7 @@ class Sprite:
         pr.draw_rectangle_rec(self.rect, pr.RED)
 
     def update(self):
-        pass   
+        pass
 
 
 # Group class to manage multiple sprites
@@ -51,4 +51,3 @@ class UnitSprite(Sprite):
     def draw(self):
         # Draw the base sprite
         pr.draw_rectangle_rec(self.rect, pr.BLUE if self.team == "player" else pr.RED)
-
