@@ -1,6 +1,7 @@
 import pyray as pr
 from sprites import UnitSprite, SpriteGroup, UnitNameSprite, UnitStatsSprite
 from settings import BATTLE_POSITIONS
+from utils import CommandUI
 
 
 class Battle:
@@ -12,6 +13,9 @@ class Battle:
         self.battle_sprites = SpriteGroup()
         self.player_sprites = SpriteGroup()
         self.enemy_sprites = SpriteGroup()
+
+        # command ui
+        self.cmd_ui = CommandUI((0, 500), (1200, 200), 30)
 
     def setup(self):
         for team, units in self.units_data.items():
@@ -38,4 +42,5 @@ class Battle:
     def update(self):
         self.battle_sprites.update()
         pr.clear_background(pr.DARKGRAY)
+        self.cmd_ui.draw()
         self.battle_sprites.draw()
