@@ -1,4 +1,5 @@
 import pyray as pr
+from game_data import TALENT_DATA
 
 
 def draw_bar(x, y, width, height, progress, bar_color, background_color):
@@ -31,17 +32,30 @@ class CommandUI:
         self.width = size[0]
         self.height = size[1]
         self.font_size = font_size
+        self.selected_command_index = 0  # Track selected command
 
-    def draw(self):
+    def draw(self, unit=None):
         # Main rectangle
         ui_rect = pr.Rectangle(self.x, self.y, self.width, self.height)
         pr.draw_rectangle_rounded(ui_rect, 0.1, 2, pr.GRAY)
 
         # Draw left GUI (Unit)
-        self.draw_left_ui(ui_rect)
+        self.draw_left_ui(ui_rect, unit)
         # self.draw_right_ui(ui_rect)
+        self.handle_input(unit)
 
-    def draw_left_ui(self, ui_rect):
+    def handle_input(self, unit):
+        """Handles input for selecting a command and scrolling the talent list."""
+        if pr.is_key_pressed(pr.KEY_S):
+            self.selected_command_index = (self.selected_command_index + 1) % len(
+                unit.talents
+            )
+        elif pr.is_key_pressed(pr.KEY_W):
+            self.selected_command_index = (self.selected_command_index - 1) % len(
+                unit.talents
+            )
+
+    def draw_left_ui(self, ui_rect, unit):
         # Unit GUI (centered on the left half)
         padding = 10
         unit_width = (ui_rect.width / 2) - padding * 2
@@ -55,25 +69,65 @@ class CommandUI:
         unit_name_rec = pr.Rectangle(
             unit_rect.x + padding, unit_rect.y + padding, 150, 50
         )
-        pr.draw_rectangle_rec(unit_name_rec, pr.GREEN)
+        pr.draw_rectangle_rec(unit_name_rec, pr.ORANGE)
+        if unit:
+            pr.draw_text(
+                unit.name,
+                int(unit_name_rec.x + padding * 1.5),
+                int(unit_name_rec.y + padding * 1.5),
+                18,
+                pr.BLACK,
+            )
 
-        # Unit command
+        # Unit command (list of talents)
         unit_cmd_rec = pr.Rectangle(
             unit_rect.x + padding, unit_rect.y + padding + 60, 250, 100
         )
-        pr.draw_rectangle_rec(unit_cmd_rec, pr.DARKBLUE)
+        pr.draw_rectangle_rec(unit_cmd_rec, pr.ORANGE)
+        if unit:
+            # Reset selected_command_index if out of range
+            if self.selected_command_index >= len(unit.talents):
+                self.selected_command_index = 0
+
+            talent_x = int(unit_cmd_rec.x + padding)
+            talent_y = int(unit_cmd_rec.y + padding)
+
+            # Draw & highlight talents
+            for index, talent in enumerate(unit.talents):
+                color = pr.YELLOW if index == self.selected_command_index else pr.BLACK
+                pr.draw_text(talent, talent_x, talent_y, 16, color)
+                talent_y += 20
 
         # Talent desc
         unit_talent_rec = pr.Rectangle(
             unit_rect.x + padding + 260, unit_rect.y + padding + 60, 300, 100
         )
-        pr.draw_rectangle_rec(unit_talent_rec, pr.DARKPURPLE)
+        pr.draw_rectangle_rec(unit_talent_rec, pr.ORANGE)
+
+        if unit and unit.talents:
+            selected_talent = unit.talents[self.selected_command_index]
+            if selected_talent in TALENT_DATA:
+                talent_info = TALENT_DATA[selected_talent]
+                desc = (
+                    f"{talent.capitalize()}: "
+                    f"{talent_info['type'].capitalize()} "
+                    f"Power={talent_info['power']} "
+                    f"Cost={talent_info['cost']} "
+                    f"Target={talent_info['target']}"
+                )
+                pr.draw_text(
+                    desc,
+                    int(unit_talent_rec.x + padding),
+                    int(unit_talent_rec.y + padding),
+                    16,
+                    pr.BLACK,
+                )
 
         # Innate Talent
         unit_innate_rec = pr.Rectangle(
             unit_rect.x + padding + 160, unit_rect.y + padding, 200, 50
         )
-        pr.draw_rectangle_rec(unit_innate_rec, pr.DARKGREEN)
+        pr.draw_rectangle_rec(unit_innate_rec, pr.ORANGE)
 
     def draw_right_ui(self, ui_rect):
         padding = 10
