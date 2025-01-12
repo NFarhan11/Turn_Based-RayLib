@@ -75,7 +75,7 @@ class UnitStatsSprite(Sprite):
     def draw(self):
         # HP text
         pr.draw_text(
-            f"{self.unit.hp}/{self.unit.get_stat('HP')}",
+            f"{self.unit.get_stat('HP')}/{self.unit.get_stat('HP', current=False)}",
             self.pos[0] - 250 if self.team == "player" else self.pos[0] + 80,
             self.pos[1],
             20,
@@ -87,7 +87,7 @@ class UnitStatsSprite(Sprite):
             self.pos[1] + 25,
             200,
             10,
-            self.unit.hp / self.unit.get_stat("HP"),
+            self.unit.get_stat("HP") / self.unit.get_stat("HP", current=False),
             pr.RED,
             pr.BLACK,
         )

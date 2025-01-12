@@ -39,7 +39,7 @@ class CommandUI:
 
         # Draw left GUI (Unit)
         self.draw_left_ui(ui_rect)
-        self.draw_right_ui(ui_rect)
+        # self.draw_right_ui(ui_rect)
 
     def draw_left_ui(self, ui_rect):
         # Unit GUI (centered on the left half)
@@ -49,7 +49,7 @@ class CommandUI:
         unit_rect = pr.Rectangle(
             ui_rect.x + padding, ui_rect.y + padding, unit_width, unit_height
         )
-        pr.draw_rectangle_rec(unit_rect, pr.RED)
+        pr.draw_rectangle_rec(unit_rect, pr.WHITE)
 
         # Unit name
         unit_name_rec = pr.Rectangle(

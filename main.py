@@ -53,6 +53,7 @@ class Game:
             self.unit_index.update()
         if self.battle:
             self.battle.update()
+            self.battle.draw()
 
         # end_draw
         pr.end_drawing()

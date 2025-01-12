@@ -156,7 +156,7 @@ class UnitIndex:
         )
 
         # stats
-        base_stats = unit.get_stats()
+        base_stats = unit.get_stats("base", current=False)
         stat_height = stats_rect.height / len(base_stats)
 
         for item, (stat, value) in enumerate(base_stats.items()):
