@@ -63,12 +63,35 @@ class Battle:
     # Turn system
     def process_turn(self):
         """Process the current unit's turn."""
-        if not self.turn_in_progress and self.priority_queue:
-            _, _, unit = heapq.heappop(self.priority_queue)
-            if unit.is_alive:
-                self.current_unit = unit
-                self.turn_in_progress = True
-                print(f"{unit.name} takes turn")
+        if not self.turn_in_progress:
+            # if queue is empty, repopulate it
+            if not self.priority_queue:
+                self.repopulate_queue()
+
+            # process next unit turn
+            if self.priority_queue:
+                _, _, unit = heapq.heappop(self.priority_queue)
+                if unit.is_alive:
+                    self.current_unit = unit
+                    self.turn_in_progress = True
+                    print(f"{unit.name} takes turn")
+                else:
+                    self.process_turn()  # Skip dead units
+
+    def repopulate_queue(self):
+        """Repopulate the queue with alive units"""
+        combined_units = [
+            unit
+            for unit_dict in self.units_data.values()
+            for unit in unit_dict.values()
+        ]
+        self.priority_queue = [
+            (-unit.get_stat("SPD"), index, unit)
+            for index, unit in enumerate(combined_units)
+            if unit.is_alive
+        ]
+        heapq.heapify(self.priority_queue)
+        print("Repopulating queue...")
 
     def end_turn(self):
         """End the current unit's turn and move to the next."""
@@ -88,17 +111,22 @@ class Battle:
                 )
                 pr.draw_circle_v(sprite_pos, 10, pr.YELLOW)
 
+    def input(self):
+        if pr.is_key_pressed(pr.KEY_F):
+            self.end_turn()
+
     # Game loop
     def update(self):
         """Update the game state."""
         self.process_turn()
         self.battle_sprites.update()
+        self.input()
 
     def draw(self):
         """Draw the game elements."""
         pr.clear_background(pr.DARKGRAY)
-        self.cmd_ui.draw()
         self.battle_sprites.draw()
+        self.cmd_ui.draw(unit=self.current_unit)
 
         if self.current_unit:  # Hightlight current unit if there is one.
             self.highlight_unit(self.current_unit)
