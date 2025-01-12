@@ -108,21 +108,50 @@ class CommandUI:
             selected_talent = unit.talents[self.selected_command_index]
             if selected_talent in TALENT_DATA:
                 talent_info = TALENT_DATA[selected_talent]
-                desc = (
-                    f"{talent.capitalize()}: "
-                    f"{talent_info['type'].capitalize()} "
-                    f"Power={talent_info['power']} "
-                    f"Cost={talent_info['cost']} "
-                    f"Target={talent_info['target']}"
-                )
-                pr.draw_text(
-                    desc,
-                    int(unit_talent_rec.x + padding),
-                    int(unit_talent_rec.y + padding),
-                    16,
-                    pr.BLACK,
-                )
 
+                # Prepare description lines for the 2x2 grid
+                desc_lines = [
+                    f"TYPE: {talent_info['type'].capitalize()}",
+                    f"POWER: {talent_info['power']}",
+                    f"COST: {talent_info['cost']}",
+                    f"TARGET: {talent_info['target']}",
+                ]
+
+                # Draw the 2x2 grid
+                grid_spacing_x = 130  # Horizontal spacing between grid items
+                grid_spacing_y = 20  # Vertical spacing between grid items
+                start_x = int(unit_talent_rec.x + padding)
+                start_y = int(unit_talent_rec.y + padding)
+
+                for i, line in enumerate(desc_lines):
+                    grid_x = (
+                        start_x + (i % 2) * grid_spacing_x
+                    )  # Alternate between two columns
+                    grid_y = (
+                        start_y + (i // 2) * grid_spacing_y
+                    )  # Move to the next row every two items
+                    pr.draw_text(line, grid_x, grid_y, 16, pr.BLACK)
+
+                # Wrap the talent's additional description
+                talent_description = talent_info.get("desc", "No description available")
+                max_line_width = 50  # Adjust maximum characters per line
+                wrapped_desc_lines = [
+                    talent_description[i : i + max_line_width]
+                    for i in range(0, len(talent_description), max_line_width)
+                ]
+
+                # Draw the talent description below the grid
+                desc_start_y = (
+                    start_y + 2 * grid_spacing_y + 20
+                )  # Offset below the grid
+                for i, line in enumerate(wrapped_desc_lines):
+                    pr.draw_text(
+                        line,
+                        start_x,  # Align with the left side of the grid
+                        desc_start_y + i * grid_spacing_y,
+                        16,
+                        pr.DARKGRAY,
+                    )
         # Innate Talent
         unit_innate_rec = pr.Rectangle(
             unit_rect.x + padding + 160, unit_rect.y + padding, 200, 50

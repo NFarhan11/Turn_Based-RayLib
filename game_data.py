@@ -30,11 +30,53 @@ UNIT_DATA = {
 }
 
 TALENT_DATA = {
-    "dodge": {"type": "utility", "power": 0, "cost": 5, "target": "self"},
-    "slash": {"type": "physical", "power": 40, "cost": 10, "target": "enemy"},
-    "thrust": {"type": "physical", "power": 35, "cost": 15, "target": "enemy"},
-    "punch": {"type": "physical", "power": 20, "cost": 20, "target": "enemy"},
-    "magic_beam": {"type": "magic", "power": 60, "cost": 15, "target": "enemy"},
-    "dash": {"type": "physical", "power": 15, "cost": 10, "target": "enemy"},
-    "dispel": {"type": "magic", "power": 30, "cost": 10, "target": "enemy_aoe"},
+    "dodge": {
+        "type": "utility",
+        "power": 0,
+        "cost": 5,
+        "target": "self",
+        "desc": "Chance to evade targeted talent.",
+    },
+    "slash": {
+        "type": "physical",
+        "power": 40,
+        "cost": 10,
+        "target": "enemy",
+        "desc": "Cut an enemy with sharp edges.",
+    },
+    "thrust": {
+        "type": "physical",
+        "power": 35,
+        "cost": 15,
+        "target": "enemy",
+        "desc": "Run through an enemy with lances.",
+    },
+    "punch": {
+        "type": "physical",
+        "power": 20,
+        "cost": 20,
+        "target": "enemy",
+        "desc": "A normal punch.",
+    },
+    "magic_beam": {
+        "type": "magic",
+        "power": 60,
+        "cost": 15,
+        "target": "enemy",
+        "desc": "A burst of mana unleashed in a beam.",
+    },
+    "dash": {
+        "type": "physical",
+        "power": 15,
+        "cost": 10,
+        "target": "enemy",
+        "desc": "Trades low damage with agility.",
+    },
+    "dispel": {
+        "type": "magic",
+        "power": 30,
+        "cost": 10,
+        "target": "enemy_aoe",
+        "desc": "Deals double damage to summons.",
+    },
 }
