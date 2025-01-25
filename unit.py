@@ -11,6 +11,7 @@ class Unit:
 
         # variables
         self.current_stats = self.base_stats.copy()
+        self.current_talent_stats = self.talents
         self.is_alive = True
 
         # temporary damage
@@ -29,7 +30,7 @@ class Unit:
         return {key: stats_source[key] for key in stats_source}
 
     def get_talents(self):
-        return self.talents
+        return self.current_talent_stats
 
     def modify_stat(self, stat, value):
         """Modify a current stat during battle."""

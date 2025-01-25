@@ -1,5 +1,6 @@
 import pyray as pr
 from game_data import TALENT_DATA
+from talents import handle_talent
 
 
 def draw_bar(x, y, width, height, progress, bar_color, background_color):
@@ -54,6 +55,15 @@ class CommandUI:
             self.selected_command_index = (self.selected_command_index - 1) % len(
                 unit.talents
             )
+        """
+        IF PRESS KEY_F
+            get current talent
+            check the cost
+
+        """
+        if pr.is_key_pressed(pr.KEY_F):
+            # print(unit.talents[self.selected_command_index])
+            handle_talent(unit, unit.talents[self.selected_command_index])
 
     def draw_left_ui(self, ui_rect, unit):
         # Unit GUI (centered on the left half)

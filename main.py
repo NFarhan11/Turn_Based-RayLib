@@ -7,6 +7,7 @@ from settings import WINDOW_WIDTH, WINDOW_HEIGHT
 
 class Game:
     def __init__(self):
+        """Initialize the game window, units, and battle system."""
         # window
         pr.init_window(WINDOW_WIDTH, WINDOW_HEIGHT, "RPG Game")
         pr.set_target_fps(60)
