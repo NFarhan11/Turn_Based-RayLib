@@ -35,6 +35,17 @@ class Battle:
             for index, unit in {k: v for k, v in units.items() if k <= 5}.items():
                 self.create_unit(unit, index, index, team)
 
+    def create_unit(self, unit, index, pos_index, team):
+        """Create a unit and its associated sprites."""
+        pos = list(BATTLE_POSITIONS[team].values())[pos_index]
+        groups = [
+            self.battle_sprites,
+            self.player_sprites if team == "player" else self.enemy_sprites,
+        ]
+        UnitSprite(pos, groups, unit, index, pos_index, team)
+        UnitNameSprite(pos, unit, groups)
+        UnitStatsSprite(pos, unit, team, groups)
+
     def initialize_priority_queue(self):
         """Initialize the priority queue based on unit speed."""
         combined_units = [
@@ -48,17 +59,7 @@ class Battle:
             if unit.is_alive
         ]
         heapq.heapify(self.priority_queue)
-
-    def create_unit(self, unit, index, pos_index, team):
-        """Create a unit and its associated sprites."""
-        pos = list(BATTLE_POSITIONS[team].values())[pos_index]
-        groups = [
-            self.battle_sprites,
-            self.player_sprites if team == "player" else self.enemy_sprites,
-        ]
-        UnitSprite(pos, groups, unit, index, pos_index, team)
-        UnitNameSprite(pos, unit, groups)
-        UnitStatsSprite(pos, unit, team, groups)
+        print("HeapQ initialized...")
 
     # Turn system
     def process_turn(self):
@@ -66,7 +67,7 @@ class Battle:
         if not self.turn_in_progress:
             # if queue is empty, repopulate it
             if not self.priority_queue:
-                self.repopulate_queue()
+                self.initialize_priority_queue()
 
             # process next unit turn
             if self.priority_queue:
@@ -77,21 +78,6 @@ class Battle:
                     print(f"{unit.name} takes turn")
                 else:
                     self.process_turn()  # Skip dead units
-
-    def repopulate_queue(self):
-        """Repopulate the queue with alive units"""
-        combined_units = [
-            unit
-            for unit_dict in self.units_data.values()
-            for unit in unit_dict.values()
-        ]
-        self.priority_queue = [
-            (-unit.get_stat("SPD"), index, unit)
-            for index, unit in enumerate(combined_units)
-            if unit.is_alive
-        ]
-        heapq.heapify(self.priority_queue)
-        print("Repopulating queue...")
 
     def end_turn(self):
         """End the current unit's turn and move to the next."""
@@ -119,6 +105,7 @@ class Battle:
     def update(self):
         """Update the game state."""
         self.process_turn()
+        self.cmd_ui.draw(unit=self.current_unit)
         self.battle_sprites.update()
         self.input()
 
@@ -126,7 +113,5 @@ class Battle:
         """Draw the game elements."""
         pr.clear_background(pr.DARKGRAY)
         self.battle_sprites.draw()
-        self.cmd_ui.draw(unit=self.current_unit)
-
         if self.current_unit:  # Hightlight current unit if there is one.
             self.highlight_unit(self.current_unit)
